@@ -1,0 +1,20 @@
+PRODUCT_NAME = example1
+VERSION = `yinst-auto-version`
+SHORT_DESC = Example 1
+LONG_DESC = Example 1 --- Something More
+CUSTODIAN = cc-ans-eng@yahoo-inc.com http://answers.yahoo.com
+OWNER = root
+GROUP = wheel
+PERM = 0555
+PACKAGE_OS_SPECIFIC = no
+
+f - - - libexec/example1/bin/nitin ../target/bin/nitin 
+f - - - libexec/example1/MY_README ./MY_README 
+
+YINST post-activate  echo ;
+crontab MAILTO=ksearch-test@yahoo-inc.com
+
+YINST bug-product Answers-Bugs
+YINST bug-component General
+
+

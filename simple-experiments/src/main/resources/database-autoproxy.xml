@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : database-autoproxy.xml
+    Created on : September 26, 2010, 9:08 AM
+    Author     : nitinv
+    Description:
+        Purpose of the document follows.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xmlns:tx="http://www.springframework.org/schema/tx"
+     xmlns:aop="http://www.springframework.org/schema/aop"
+     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+    <import resource="classpath:database.xml"/>
+    
+    <alias name="edu.nitin.springframework.TxClass" alias="edu.nitin.springframework.TxInterface"/>
+    
+    <aop:config>
+        <aop:pointcut id="txInterfaceServiceOperation" expression="execution(* edu.nitin.springframework.TxInterface.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txInterfaceServiceOperation" id="abc"/>
+    </aop:config>
+
+<!--
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
+    
+    <bean id="txInterfaceAdvisor" class="org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor" lazy-init="false">
+        <property name="advice" ref="txAdvice"/>
+        <property name="expression" value="execution(* edu.nitin.springframework.TxInterface.*(..))"/>
+    </bean>
+-->
+
+</beans>

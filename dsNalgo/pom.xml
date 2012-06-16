@@ -1,0 +1,16 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>computerscience</groupId>
+  <artifactId>algorithms-playground-nitinv</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>algorithms-playground-nitinv</name>
+  <modules>
+	<module>coordinate</module>
+	<module>dataspace</module>
+	<module>radixsort</module>
+	<module>match</module>
+  </modules>
+</project>
+

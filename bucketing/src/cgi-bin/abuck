@@ -1,0 +1,135 @@
+#!/bin/bash
+#set -vx;
+
+# extract the a=b&c=d ... kv's.
+kv="${REQUEST_URI##$SCRIPT_NAME}";
+kv="${kv#\?}";
+
+if [ ${#REQUEST_URI} -eq 0 ] ; then
+kv="$1";
+fi
+
+function logerr(){
+echo "$*" >&2;
+}
+
+logerr "XXX $kv";
+env >&2;
+logerr "======"  
+
+e400="400 Invalid Request";
+e200="200 OK";
+e500="500 Internal server Error";
+
+err=$e200;
+
+
+function send_cookie(){
+echo "Set-Cookie: B=$1;path=/;domain=.yahoo.com";
+}
+
+STUB='/bin/echo';
+#MKBCOOKIETOOL=
+USMTOOL='/home/y/var/usm/tools/usmcookieselection';
+MKBCOOKIETOOL=$USMTOOL;
+#MKBCOOKIETOOL=$STUB;
+
+function make_cookie(){
+if [  -x $MKBCOOKIETOOL ]; then 
+	logerr "MyCommand: $MKBCOOKIETOOL -t bcookie -l $rangelow -h $rangehigh -p"
+	bcookie=$($MKBCOOKIETOOL -t bcookie -l $rangelow -h $rangehigh -p 2>&1);
+	logerr "BCookie: $bcookie"
+else
+	err="$e500";
+	return 1;
+fi
+return 0;
+
+}
+
+
+function print_status(){
+:
+#echo "HTTP/1.1 $err";  # HTTP STATUS CODE LINE
+}
+
+function respond_to_user(){
+print_status;
+if [ "$err" == "$e200" ]; then send_cookie $bcookie; fi
+echo "Content-Type: text/plain";
+echo "";
+if [ "$err" == "$e200" ]; then 
+echo "Cookie set. You are in bucket $val";
+else
+echo "$MKBCOOKIETOOL isn't installed on the server."
+fi
+
+}
+
+
+function print_usage(){
+echo "Content-Type: text/plain";
+echo "";
+
+cat<<EOF
+Usage: /cgi-bin/abuck?<feature>=<value> where 
+feature is ratings
+value is one of C, B1, B2, IB1, IB2, IB3... (C stands for control)
+EOF
+
+}
+
+if [ ${#kv} -le 0 ] ; then
+err="$e400";
+print_usage;
+exit 400;
+fi
+
+feat='--';
+while [ 1 == 1 ] ; do 
+IFS='=' read f v ;
+feat="$f";
+val="$v"; 
+break; 
+done <<<"$kv"
+
+logerr "$feat=>$val"  
+
+err="$e400";
+case $feat in
+ratings) if [[ "$val" == "B1" ]]; then 
+	rangelow=150;
+	rangehigh=249;
+	elif [[ "$val" == "IB3" ]]; then 
+	rangelow=450;
+	rangehigh=499;
+	elif [[ "$val" == "IB2" ]]; then 
+	rangelow=400;
+	rangehigh=449;
+	elif [[ "$val" == "IB1" ]]; then 
+	rangelow=350;
+	rangehigh=399;
+	elif [[ "$val" == "B2" ]]; then 
+	rangelow=250;
+	rangehigh=349;
+	elif [[ "$val" == "C" ]]; then
+	rangelow=0
+	rangehigh=149;
+	fi
+	err="$e200";
+	;;
+
+--) err="$e400";;	
+esac
+
+if [ "$err" == "$e200" ]; then 
+make_cookie ;
+respond_to_user;
+else
+print_status;
+print_usage;
+fi
+exit ;
+
+
+

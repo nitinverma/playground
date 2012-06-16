@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xmlns:tx="http://www.springframework.org/schema/tx"
+     xmlns:aop="http://www.springframework.org/schema/aop"
+     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+    <!--
+    The Order of the definition matters.
+    1. You can not declare two beens with same id in the same file.
+    2. If have two beans with the same id in two files the order matters, later is taken.
+    3. aliases are processed in the end so can not be overridden by a bean.
+    4. alias can only be overridden by an alias.
+    -->
+    
+    <import resource="classpath:loadBean2.xml"/>
+
+    <bean id="A" class="java.lang.String">
+        <constructor-arg value="A-bean-1"/>
+    </bean>
+    <bean id="AX" class="java.lang.String">
+        <constructor-arg value="AX-bean-1"/>
+    </bean>
+    <bean id="a" class="java.lang.String">
+        <constructor-arg value="a-bean-1"/>
+    </bean>
+
+    <alias name="AX" alias="a"/>
+    
+    
+</beans>

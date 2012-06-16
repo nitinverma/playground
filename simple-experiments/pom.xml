@@ -1,0 +1,192 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+      
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>yahoo.yinst.apt_bulk</groupId>
+    <artifactId>apt-bulk-playground-nitinv-simple-experiments</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>apt-bulk-playground-nitinv-simple-experiments</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <log4j.configuration>log4j.properties</log4j.configuration>
+    </properties>
+    
+    <parent>
+        <groupId>yahoo.yinst.apt_bulk_super_pom</groupId>
+        <artifactId>apt-bulk-super-pom</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.4.3</version>
+                <configuration>
+                    <forkMode>pertest</forkMode>
+                    <!-- <argLine>-Djava.library.path=/home/y/lib -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y</argLine> -->
+                    <systemProperties>
+                        <property>
+                            <name>log4j.configuration</name>
+                            <value>${log4j.configuration}</value>
+                        </property>
+                    </systemProperties>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <profiles>
+        
+        <profile>
+            <id>run15</id>
+            <activation>
+                <jdk>1.5</jdk>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.3.1</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <classifier>jdk15</classifier>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            
+            <dependencies>
+            </dependencies>
+
+        </profile>
+
+        <profile>
+            <activation>
+                <jdk>1.6</jdk>
+            </activation>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.3.1</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <classifier>jdk16</classifier>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+            </dependencies>
+        </profile>
+        
+    </profiles>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
+            <classifier>jdk15</classifier>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
+            <version>2.5.6</version>
+        </dependency>
+        -->
+
+        <dependency>
+            <groupId>yahoo.yinst.jports_org_springframework__spring</groupId>
+            <artifactId>org_springframework__spring</artifactId>
+        </dependency>
+         
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.15</version>
+        </dependency>
+
+        <dependency>
+            <groupId>yahoo.yinst.yjava_oracle_jdbc_thin</groupId>
+            <artifactId>ojdbc14</artifactId>
+            <version>10.2.0.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>10.4.2.0</version>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjtools</artifactId>
+            <version>1.6.9</version>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>yahoo.yinst.jports_aspectj__aspectjtools</groupId>
+            <artifactId>aspectj__aspectjtools</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jotm</groupId>
+            <artifactId>jotm</artifactId>
+            <version>2.0.10</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>yahoo.yinst.jports_commons_httpclient__commons_httpclient</groupId>
+            <artifactId>commons_httpclient__commons_httpclient</artifactId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>yahoo.yinst.jports_commons_codec__commons_codec</groupId>
+            <artifactId>commons_codec__commons_codec</artifactId>
+            <type>jar</type>
+        </dependency>
+
+    </dependencies>
+</project>
