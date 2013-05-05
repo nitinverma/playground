@@ -1,3 +1,25 @@
+
+Python
+===
+    $ brew install python --with-brewed-openssl --framework --universal
+    $ brew install python3 --with-brewed-openssl --framework --universal
+
+distribute
+===
+    $ pip install --upgrade distribute
+
+pip
+===
+    $ pip install --upgarde pip
+
+virtualenv
+===
+   $ pip install virtualenv
+   $ pip install virtualenvwrapper
+   $ source /usr/local/share/python/virtualenvwrapper.sh
+
+
+
 http://www.thisisthegreenroom.com/2011/installing-python-numpy-scipy-matplotlib-and-ipython-on-lion/
 http://hackercodex.com/guide/python-virtualenv-on-mac-osx-mountain-lion-10.8/
 
