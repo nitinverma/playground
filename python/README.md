@@ -14,9 +14,9 @@ pip
 
 virtualenv
 ===
-   $ pip install virtualenv
-   $ pip install virtualenvwrapper
-   $ source /usr/local/share/python/virtualenvwrapper.sh
+    $ pip install virtualenv
+    $ pip install virtualenvwrapper
+    $ source /usr/local/share/python/virtualenvwrapper.sh
 
 
 
