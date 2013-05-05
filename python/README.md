@@ -1,3 +1,6 @@
+http://www.thisisthegreenroom.com/2011/installing-python-numpy-scipy-matplotlib-and-ipython-on-lion/
+http://hackercodex.com/guide/python-virtualenv-on-mac-osx-mountain-lion-10.8/
+
 ==> Caveats
 Homebrew's Python framework
   /usr/local/Cellar/python/2.7.4/Frameworks/Python.framework
