@@ -66,7 +66,7 @@ Install Fortran
 
     $ brew install gfortran
 
-Install numpy and scipy
+Install NumPy and SciPy
 ===
 
 These may give you a lot of warnings but would install.
@@ -74,18 +74,31 @@ These may give you a lot of warnings but would install.
     $ pip install numpy
     $ pip install scipy
 
-Install nltk
+Install nltk (Natural language toolkit)
 ===
 
-   $ pip install nltk
+    $ pip install nltk
 
 Install matplotlib
 ===
 http://matplotlib.org/
 
-   $ pip install matplotlib
+    $ pip install matplotlib
 
+Install IPython
+===
 
+    $ pip install ipython
+
+Install pyqt
+===
+
+    $ brew install pyqt
+
+Install QT dmg
+===
+
+    Downlaod http://qt-project.org/downloads; current version ''Qt 5.0.2 for Mac''
 
 
 References
@@ -93,6 +106,9 @@ References
 
 http://www.thisisthegreenroom.com/2011/installing-python-numpy-scipy-matplotlib-and-ipython-on-lion/
 http://hackercodex.com/guide/python-virtualenv-on-mac-osx-mountain-lion-10.8/
+http://www.calvinx.com/2012/11/03/ipython-qtconsole/
+https://github.com/sympy/sympy/wiki/Installing-the-IPython-qtconsole-in-Mac-OS-X
+http://qt-project.org/downloads
 
 Caveats
 ===
