@@ -32,7 +32,7 @@ virtualenv
     $ pip install virtualenv
     $ pip install virtualenvwrapper
 
-Sourcing virtualenvwrapper.sh gives you need scripts in ~/.virtualenvs/
+Sourcing virtualenvwrapper.sh gives you need scripts in ~/.virtualenvs/, you would like to add this to your .badh_profile as it defines some functions.
 
     $ source /usr/local/share/python/virtualenvwrapper.sh
 
@@ -54,12 +54,35 @@ Sourcing virtualenvwrapper.sh gives you need scripts in ~/.virtualenvs/
     
     0 directories, 14 files
 
+Install Fortran
+===
 
-References & Notes
+    $ brew install gfortran
+
+
+References
 ===
 
 http://www.thisisthegreenroom.com/2011/installing-python-numpy-scipy-matplotlib-and-ipython-on-lion/
 http://hackercodex.com/guide/python-virtualenv-on-mac-osx-mountain-lion-10.8/
+
+Caveats
+===
+
+==> Caveats
+Brews that require a Fortran compiler should not use:
+  depends_on 'gfortran'
+
+The preferred method of declaring Fortran support is to use:
+  def install
+    ...
+    ENV.fortran
+    ...
+  end
+
+==> Summary
+
+---
 
 ==> Caveats
 Homebrew's Python framework
@@ -89,7 +112,7 @@ See: https://github.com/mxcl/homebrew/wiki/Homebrew-and-Python
 ==> Summary
 
 
------
+---
 
 
 ==> Caveats
