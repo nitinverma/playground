@@ -1,5 +1,7 @@
 #This is for Mac, Mountain Lion
 
+doctoc .
+
 Python
 ===
     $ brew install python --with-brewed-openssl --framework --universal
