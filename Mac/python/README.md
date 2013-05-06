@@ -129,6 +129,11 @@ Starting IPython Notebook
 
     $ ipython notebook --pylab=inline
 
+Location for Notebooks
+===
+
+    $ alias ipn="cd ~/notebooks/; ipython notebook --pylab=inline"
+
 ---
 
 References

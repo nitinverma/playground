@@ -66,8 +66,20 @@ if [ -f /usr/local/share/python/virtualenvwrapper.sh ]; then
 fi
 
 
-# Alais
-alias play="cd ~/Codes/git/github/nitinverma/playground/"
-alias pins="cd ~/Codes/git/github/pinadoc/pinadoc"
+# Alias
+
+if [ -d ~/Codes/git/github/nitinverma/playground ]; then
+	alias play="cd ~/Codes/git/github/nitinverma/playground/"
+fi
+
+if [ -d ~/Codes/git/github/pinadoc/pinadoc ]; then
+	alias pins="cd ~/Codes/git/github/pinadoc/pinadoc"
+fi
+
+if [ -d ~/notebooks/ ]; then
+	alias ipn="cd ~/notebooks/; ipython notebook --pylab=inline"
+fi
+
+alias
 
 echo "Welcome $USER"
