@@ -66,13 +66,14 @@ Install Fortran
 
     $ brew install gfortran
 
-Install NumPy and SciPy
+Install NumPy, SciPy and SymPy
 ===
 
 These may give you a lot of warnings but would install.
 
     $ pip install numpy
     $ pip install scipy
+    $ pip install sympy
 
 Install nltk (Natural language toolkit)
 ===
@@ -90,16 +91,45 @@ Install IPython
 
     $ pip install ipython
 
+Install QT 
+===
+
+    $ brew install qt
+
 Install pyqt
 ===
 
     $ brew install pyqt
 
-Install QT dmg
+Install ZeroMQ
 ===
 
-    Downlaod http://qt-project.org/downloads; current version ''Qt 5.0.2 for Mac''
+    $ brew install zmq
+    $ pip install pyzmq
 
+Install pygments (Python syntax highlighter)
+===
+
+    $ pip install pygments
+
+Starting IPython QTConsole
+===
+
+    ipython qtconsole --pylab=inline
+
+If you need IPython Notebook
+
+Install Tornado
+===
+
+    $ pip install tornado
+
+Starting IPython Notebook
+===
+
+    $ ipython notebook --pylab=inline
+
+---
 
 References
 ===
