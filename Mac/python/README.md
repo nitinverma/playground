@@ -83,6 +83,7 @@ Install nltk (Natural language toolkit)
 Install matplotlib
 ===
 http://matplotlib.org/
+Tutorial: http://www.loria.fr/~rougier/teaching/matplotlib/
 
     $ pip install matplotlib
 
