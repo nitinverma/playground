@@ -1,8 +1,6 @@
 #This is for Mac, Mountain Lion
 
-doctoc .
-
-Python
+[Python](http://en.wikipedia.org/wiki/Python_(programming_language))
 ===
     $ brew install python --with-brewed-openssl --framework --universal
 
@@ -25,7 +23,7 @@ distribute
 ===
     $ pip install --upgrade distribute
 
-pip
+[pip](http://en.wikipedia.org/wiki/Pip)
 ===
     $ pip install --upgarde pip
 
@@ -63,12 +61,12 @@ Sourcing virtualenvwrapper.sh gives you need scripts in ~/.virtualenvs/, you wou
     
     0 directories, 14 files
 
-Install Fortran
+Install [Fortran](http://en.wikipedia.org/wiki/Fortran)
 ===
 
     $ brew install gfortran
 
-Install NumPy, SciPy and SymPy
+Install [NumPy](http://en.wikipedia.org/wiki/NumPy), [SciPy](http://en.wikipedia.org/wiki/SciPy) and [SymPy](http://en.wikipedia.org/wiki/SymPy)
 ===
 
 These may give you a lot of warnings but would install.
@@ -77,19 +75,19 @@ These may give you a lot of warnings but would install.
     $ pip install scipy
     $ pip install sympy
 
-Install nltk (Natural language toolkit)
+Install [nltk](http://en.wikipedia.org/wiki/Natural_Language_Toolkit) (Natural language toolkit)
 ===
 
     $ pip install nltk
 
-Install matplotlib
+Install [matplotlib](http://en.wikipedia.org/wiki/Matplotlib)
 ===
 http://matplotlib.org/
 Tutorial: http://www.loria.fr/~rougier/teaching/matplotlib/
 
     $ pip install matplotlib
 
-Install IPython
+Install [IPython](http://en.wikipedia.org/wiki/IPython)
 ===
 
     $ pip install ipython
