@@ -1,8 +1,14 @@
+#This is for Mac, Mountain Lion
 
 Python
 ===
     $ brew install python --with-brewed-openssl --framework --universal
+
+Python3 is not that stable as of now but you can install as per the following command
+
     $ brew install python3 --with-brewed-openssl --framework --universal
+
+This would also install pip3
 
 distribute
 ===
@@ -16,7 +22,28 @@ virtualenv
 ===
     $ pip install virtualenv
     $ pip install virtualenvwrapper
+
+Sourcing virtualenvwrapper.sh gives you need scripts in ~/.virtualenvs/
+
     $ source /usr/local/share/python/virtualenvwrapper.sh
+
+    ~/.virtualenvs/
+    ├── get_env_details
+    ├── initialize
+    ├── postactivate
+    ├── postdeactivate
+    ├── postmkproject
+    ├── postmkvirtualenv
+    ├── postrmproject
+    ├── postrmvirtualenv
+    ├── preactivate
+    ├── predeactivate
+    ├── premkproject
+    ├── premkvirtualenv
+    ├── prermproject
+    └── prermvirtualenv
+    
+    0 directories, 14 files
 
 
 
