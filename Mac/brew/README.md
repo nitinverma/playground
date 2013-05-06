@@ -1,5 +1,11 @@
+Installing brew
+===
+
+Better checkout http://mxcl.github.io/homebrew/
+
 Homebrew for given versions
 ====
+
 http://stackoverflow.com/questions/3987683/homebrew-install-specific-version-of-formula
 
 Example:
