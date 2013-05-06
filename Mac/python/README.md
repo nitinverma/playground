@@ -1,6 +1,7 @@
 #This is for Mac, Mountain Lion
 
-[Python](http://en.wikipedia.org/wiki/Python_(programming_language))
+[Python] [py]
+[py]: http://en.wikipedia.org/wiki/Python_(programming_language)
 ===
     $ brew install python --with-brewed-openssl --framework --universal
 
@@ -23,7 +24,8 @@ distribute
 ===
     $ pip install --upgrade distribute
 
-[pip](http://en.wikipedia.org/wiki/Pip)
+[pip] [pip]
+[pip]: http://en.wikipedia.org/wiki/Pip_(Python)
 ===
     $ pip install --upgarde pip
 
