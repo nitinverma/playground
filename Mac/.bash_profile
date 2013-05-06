@@ -55,10 +55,16 @@ done
 
 export PATH
 
+# Define pip cache dir
+if [ -d ~/.pip/cache ]; then
+	export PIP_DOWNLOAD_CACHE=~/.pip/cache
+fi
+
 # Souring python virtual env
 if [ -f /usr/local/share/python/virtualenvwrapper.sh ]; then
 	source /usr/local/share/python/virtualenvwrapper.sh
 fi
+
 
 # Alais
 alias play="cd ~/Codes/git/github/nitinverma/playground/"

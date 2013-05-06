@@ -27,12 +27,19 @@ pip
 ===
     $ pip install --upgarde pip
 
+Following entry in your .bash_profile would help you cache pip downloads.
+
+    # Define pip cache dir
+    if [ -d ~/.pip/cache ]; then
+        export PIP_DOWNLOAD_CACHE=~/.pip/cache
+    fi
+
 virtualenv
 ===
     $ pip install virtualenv
     $ pip install virtualenvwrapper
 
-Sourcing virtualenvwrapper.sh gives you need scripts in ~/.virtualenvs/, you would like to add this to your .badh_profile as it defines some functions.
+Sourcing virtualenvwrapper.sh gives you need scripts in ~/.virtualenvs/, you would like to add this to your .bash_profile as it defines some functions.
 
     $ source /usr/local/share/python/virtualenvwrapper.sh
 
@@ -58,6 +65,27 @@ Install Fortran
 ===
 
     $ brew install gfortran
+
+Install numpy and scipy
+===
+
+These may give you a lot of warnings but would install.
+
+    $ pip install numpy
+    $ pip install scipy
+
+Install nltk
+===
+
+   $ pip install nltk
+
+Install matplotlib
+===
+http://matplotlib.org/
+
+   $ pip install matplotlib
+
+
 
 
 References
