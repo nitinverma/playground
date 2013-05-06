@@ -1,8 +1,8 @@
 #This is for Mac, Mountain Lion
 
 [Python] [py]
-[py]: http://en.wikipedia.org/wiki/Python_(programming_language)
 ===
+[py]: http://en.wikipedia.org/wiki/Python_(programming_language)
     $ brew install python --with-brewed-openssl --framework --universal
 
 Python3 is not that stable as of now but you can install as per the following command
@@ -25,8 +25,8 @@ distribute
     $ pip install --upgrade distribute
 
 [pip] [pip]
-[pip]: http://en.wikipedia.org/wiki/Pip_(Python)
 ===
+[pip]: http://en.wikipedia.org/wiki/Pip_(Python)
     $ pip install --upgarde pip
 
 Following entry in your .bash_profile would help you cache pip downloads.
