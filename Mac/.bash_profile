@@ -67,6 +67,11 @@ fi
 
 
 # Alias
+MACVIM=$(which mvim 2>/dev/null)
+
+if [ -s $MACVIM ]; then
+	alias vi="$MACVIM"
+fi
 
 if [ -d ~/Codes/git/github/nitinverma/playground ]; then
 	alias play="cd ~/Codes/git/github/nitinverma/playground/"
