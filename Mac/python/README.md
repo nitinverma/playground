@@ -10,6 +10,15 @@ Python3 is not that stable as of now but you can install as per the following co
 
 This would also install pip3
 
+Make sure system python points to brewed one.
+
+    $ ls -la /System/Library/Frameworks/Python.framework/Versions/Current
+    lrwxr-xr-x  1 root  wheel  3 Nov 16 22:00 /System/Library/Frameworks/Python.framework/Versions/Current -> 2.7
+    $ sudo rm -rf /System/Library/Frameworks/Python.framework/Versions/Current
+    $ sudo ln -sf /usr/local/Cellar/python/2.7.4/Frameworks/Python.framework/Versions/Current /System/Library/Frameworks/Python.framework/Versions/Current 
+    $ ls -la /System/Library/Frameworks/Python.framework/Versions/Current
+    lrwxr-xr-x  1 root  wheel  75 May  6 11:25 /System/Library/Frameworks/Python.framework/Versions/Current -> /usr/local/Cellar/python/2.7.4/Frameworks/Python.framework/Versions/Current
+
 distribute
 ===
     $ pip install --upgrade distribute
@@ -46,6 +55,8 @@ Sourcing virtualenvwrapper.sh gives you need scripts in ~/.virtualenvs/
     0 directories, 14 files
 
 
+References & Notes
+===
 
 http://www.thisisthegreenroom.com/2011/installing-python-numpy-scipy-matplotlib-and-ipython-on-lion/
 http://hackercodex.com/guide/python-virtualenv-on-mac-osx-mountain-lion-10.8/
