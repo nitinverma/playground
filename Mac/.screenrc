@@ -1,0 +1,13 @@
+# skip the startup message
+startup_message off
+# #
+# # # Display a caption string below, appearing like tabs and
+# # # displaying the window number and application name (by default).
+caption always
+caption string "%{kw}%-w%{wr}%n %t%{-}%+w"
+# # #
+# # # Select first screen
+select 0
+#
+shell -$SHELL
+

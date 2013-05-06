@@ -41,7 +41,6 @@ do
 		BPATH=("${BPATH[@]}" $LOCATION)
 	fi
 
-	echo "Location $LOCATION"
 done
 
 for index in "${!BPATH[@]}"
@@ -61,3 +60,8 @@ if [ -f /usr/local/share/python/virtualenvwrapper.sh ]; then
 	source /usr/local/share/python/virtualenvwrapper.sh
 fi
 
+# Alais
+alias play="cd ~/Codes/git/github/nitinverma/playground/"
+alias pins="cd ~/Codes/git/github/pinadoc/pinadoc"
+
+echo "Welcome $USER"
