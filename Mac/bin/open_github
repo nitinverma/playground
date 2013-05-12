@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+open https://github.com/nitinverma?tab=repositories
+
