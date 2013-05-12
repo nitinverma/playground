@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+NAME=homebrew.mxcl.elasticsearch
+PID=$(launchctl list | grep $NAME | awk '{ print $1}')
+
+if [ -s $PID ]
+then
+	launchctl load ~/Library/LaunchAgents/$NAME.plist
+	PID=$(launchctl list | grep $NAME | awk '{ print $1}')
+	ps -fwww -p $PID
+fi
+

@@ -13,6 +13,16 @@ export ORIG_PATH=$PATH
 APATH=($(echo $PATH | awk -F: '{ for (i = 1; i <= NF; i++ ) { print $i} }' ))
 BPATH=()
 
+## ${USER}/bin
+
+USER_BIN=${HOME}/bin
+
+if [ -d $USER_BIN ]; then
+	BPATH=("${BPATH[@]}" $USER_BIN)
+fi
+
+## Homebew installs
+
 BREW=$(which brew 2>/dev/null)
 BREW_PREFIX=$($BREW --prefix)
 
@@ -69,6 +79,10 @@ fi
 # Alias
 MACVIM=$(which mvim 2>/dev/null)
 
+if [ -d $USER_BIN ]; then
+	alias my="cd $USER_BIN"
+fi
+
 if [ -s $MACVIM ]; then
 	alias vi="$MACVIM"
 fi
@@ -85,6 +99,10 @@ if [ -d ~/notebooks/ ]; then
 	alias ipn="cd ~/notebooks/; ipython notebook --pylab=inline"
 fi
 
+alias sf="ssh nitin_matrix,pjam@shell.sourceforge.net"
+
+echo "Alias list:"
 alias
+echo "PATH: $PATH"
 
 echo "Welcome $USER"

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+open /usr/local/var/lib/elasticsearch/plugins/head/_site/index.html
+
