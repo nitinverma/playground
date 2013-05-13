@@ -8,6 +8,7 @@
 # http://www.thegeekstuff.com/2010/06/bash-array-tutorial/
 # if then else elif fi
 # http://www.thegeekstuff.com/2010/06/bash-if-statement-examples/
+
 export ORIG_PATH=$PATH
 
 APATH=($(echo $PATH | awk -F: '{ for (i = 1; i <= NF; i++ ) { print $i} }' ))
@@ -16,11 +17,20 @@ BPATH=()
 ## ${USER}/bin
 
 USER_BIN=${HOME}/bin
+USER_LOCAL_BIN=${HOME}/usr/local/bin
+USER_REMOTE_BIN=${HOME}/usr/remote/bin
 
 if [ -d $USER_BIN ]; then
 	BPATH=("${BPATH[@]}" $USER_BIN)
 fi
 
+if [ -d $USER_LOCAL_BIN ]; then
+	BPATH=("${BPATH[@]}" $USER_LOCAL_BIN)
+fi
+
+if [ -d $USER_REMOTE_BIN ]; then
+	BPATH=("${BPATH[@]}" $USER_REMOTE_BIN)
+fi
 ## Homebew installs
 
 BREW=$(which brew 2>/dev/null)
@@ -91,15 +101,18 @@ if [ -d ~/Codes/git/github/nitinverma/playground ]; then
 	alias play="cd ~/Codes/git/github/nitinverma/playground/"
 fi
 
-if [ -d ~/Codes/git/github/pinadoc/pinadoc ]; then
-	alias pins="cd ~/Codes/git/github/pinadoc/pinadoc"
-fi
-
 if [ -d ~/notebooks/ ]; then
 	alias ipn="cd ~/notebooks/; ipython notebook --pylab=inline"
 fi
 
+if [ -d ~/Library/Caches/Nitin ]; then
+	alias myc="cd ~/Library/Caches/Nitin"
+fi
+
 alias sf="ssh nitin_matrix,pjam@shell.sourceforge.net"
+alias sfc="ssh -t nitin_matrix,pjam@shell.sourceforge.net create"
+
+source ~/.pins.alias
 
 echo "Alias list:"
 alias
