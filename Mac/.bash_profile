@@ -9,7 +9,10 @@
 # if then else elif fi
 # http://www.thegeekstuff.com/2010/06/bash-if-statement-examples/
 
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home
 export ORIG_PATH=$PATH
+export RBENV_ROOT=/usr/local/var/rbenv
+export PYTHONPATH="/usr/local/lib/python2.7/site-packages"
 
 APATH=($(echo $PATH | awk -F: '{ for (i = 1; i <= NF; i++ ) { print $i} }' ))
 BPATH=()
@@ -18,7 +21,13 @@ BPATH=()
 
 USER_BIN=${HOME}/bin
 USER_LOCAL_BIN=${HOME}/usr/local/bin
+USER_LOCAL_SBIN=${HOME}/usr/local/sbin
 USER_REMOTE_BIN=${HOME}/usr/remote/bin
+
+if [[ -d $RBENV_ROOT/shims ]]
+then
+	BPATH=("${BPATH[@]}" $USER_BIN)
+fi
 
 if [ -d $USER_BIN ]; then
 	BPATH=("${BPATH[@]}" $USER_BIN)
@@ -26,6 +35,10 @@ fi
 
 if [ -d $USER_LOCAL_BIN ]; then
 	BPATH=("${BPATH[@]}" $USER_LOCAL_BIN)
+fi
+
+if [ -d $USER_LOCAL_SBIN ]; then
+	BPATH=("${BPATH[@]}" $USER_LOCAL_SBIN)
 fi
 
 if [ -d $USER_REMOTE_BIN ]; then
@@ -38,7 +51,8 @@ BREW_PREFIX=$($BREW --prefix)
 
 if [ -s $BREW ]; then
 	BREW_BIN=${BREW_PREFIX}/bin
-	BPATH=("${BPATH[@]}" $BREW_BIN)
+	BREW_SBIN=${BREW_PREFIX}/sbin
+	BPATH=("${BPATH[@]}" $BREW_BIN $BREW_SBIN)
 	PYTHON_SHARE=${BREW_PREFIX}/share/python
 	BPATH=("${BPATH[@]}" $PYTHON_SHARE)
 fi
@@ -85,6 +99,14 @@ if [ -f /usr/local/share/python/virtualenvwrapper.sh ]; then
 	source /usr/local/share/python/virtualenvwrapper.sh
 fi
 
+# rbenv
+
+RBENV=$(which rbenv 2>/dev/null)
+
+if [ -s $RBENV ]
+then
+	eval "$(rbenv init -)"
+fi
 
 # Alias
 MACVIM=$(which mvim 2>/dev/null)
@@ -109,8 +131,10 @@ if [ -d ~/Library/Caches/Nitin ]; then
 	alias myc="cd ~/Library/Caches/Nitin"
 fi
 
+alias of="open \${PWD}"
 alias sf="ssh nitin_matrix,pjam@shell.sourceforge.net"
 alias sfc="ssh -t nitin_matrix,pjam@shell.sourceforge.net create"
+alias rediss="redis-server /usr/local/etc/redis.conf"
 
 source ~/.pins.alias
 
