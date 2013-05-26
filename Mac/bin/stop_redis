@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+(
+	PID=$(cat /usr/local/var/run/redis.pid)
+	PID=$(ps -p $PID -fwww | grep -i redis-server | awk '{ print $2}')
+
+	if [[ ""$PID"" == """" ]]
+	then
+		PIDS=$(ps -eafwww | grep -v grep | grep -i redis-server | awk '{print $2}')
+	else
+		PIDS=$PID
+	fi
+	
+	if [[ ""$PIDS"" != """" ]]
+	then
+		for PID in $PIDS
+		do
+			ps -p $PID -fwww
+			kill -9 $PID
+		done
+	fi
+)

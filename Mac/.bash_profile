@@ -12,7 +12,7 @@
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home
 export ORIG_PATH=$PATH
 export RBENV_ROOT=/usr/local/var/rbenv
-export PYTHONPATH="/usr/local/lib/python2.7/site-packages"
+#export PYTHONPATH="/usr/local/lib/python2.7/site-packages"
 
 APATH=($(echo $PATH | awk -F: '{ for (i = 1; i <= NF; i++ ) { print $i} }' ))
 BPATH=()
@@ -99,6 +99,12 @@ if [ -f /usr/local/share/python/virtualenvwrapper.sh ]; then
 	source /usr/local/share/python/virtualenvwrapper.sh
 fi
 
+# Souring python autoenv
+if [ -f /usr/local/opt/autoenv/activate.sh ]
+then
+	source /usr/local/opt/autoenv/activate.sh
+fi
+
 # rbenv
 
 RBENV=$(which rbenv 2>/dev/null)
@@ -134,7 +140,9 @@ fi
 alias of="open \${PWD}"
 alias sf="ssh nitin_matrix,pjam@shell.sourceforge.net"
 alias sfc="ssh -t nitin_matrix,pjam@shell.sourceforge.net create"
-alias rediss="redis-server /usr/local/etc/redis.conf"
+alias redis="start_redis"
+alias tabula="start_tabula"
+alias pip-update="pip freeze --local | awk -F= ' { print $1 } ' | xargs -n1 -I% sh -c 'pip install -U %'"
 
 source ~/.pins.alias
 
