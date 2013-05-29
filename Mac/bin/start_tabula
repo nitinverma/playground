@@ -3,8 +3,8 @@
 (
 	stop_redis
 	start_redis
+	cd ~/Codes/git/github/nitinverma/tabula
 	rbenv local 1.9.3-p392
 	rbenv versions
-	cd ~/Codes/git/github/nitinverma/tabula
 	bundle exec foreman start
 )
