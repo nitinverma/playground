@@ -9,6 +9,24 @@
 # if then else elif fi
 # http://www.thegeekstuff.com/2010/06/bash-if-statement-examples/
 
+# Functions
+
+reset_open_with() {
+	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister 	-kill -r -domain local -domain system -domain user
+}
+
+pip-update() {
+	# pip freeze --local | awk -F= ' { print $1 } ' | xargs -n1 -I% sh -c 'pip install -U %'
+	MODULES=$(pip freeze --local | awk -F= ' { print $1 } ')
+	for MODULE in $MODULES
+	do
+		echo "$(tput setaf 2)$MODULE$(tput sgr0)"
+		pip install -U $MODULE
+	done
+}
+
+# Exports
+
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home
 export ORIG_PATH=$PATH
 export RBENV_ROOT=/usr/local/var/rbenv
@@ -44,7 +62,8 @@ fi
 if [ -d $USER_REMOTE_BIN ]; then
 	BPATH=("${BPATH[@]}" $USER_REMOTE_BIN)
 fi
-## Homebew installs
+
+## Homebrew installs
 
 BREW=$(which brew 2>/dev/null)
 BREW_PREFIX=$($BREW --prefix)
@@ -140,14 +159,15 @@ fi
 alias of="open \${PWD}"
 alias sf="ssh nitin_matrix,pjam@shell.sourceforge.net"
 alias sfc="ssh -t nitin_matrix,pjam@shell.sourceforge.net create"
-alias redis="start_redis"
 alias tabula="start_tabula"
-alias pip-update="pip freeze --local | awk -F= ' { print $1 } ' | xargs -n1 -I% sh -c 'pip install -U %'"
 
 source ~/.pins.alias
+
+# Echo settings
 
 echo "Alias list:"
 alias
 echo "PATH: $PATH"
 
 echo "Welcome $USER"
+
