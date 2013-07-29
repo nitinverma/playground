@@ -10,9 +10,31 @@
 # http://www.thegeekstuff.com/2010/06/bash-if-statement-examples/
 
 # Functions
+# SSH to linux
+sshl() {
+	LC_CTYPE="en_US.UTF-8" ssh $@
+}
+
+sshr() {
+	sshl -i ~/.ssh/nitin-eu-west-1-key-1.pem $@
+}
 
 reset_open_with() {
 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister 	-kill -r -domain local -domain system -domain user
+}
+
+git_branch() {
+	git checkout $1
+	EXIT_CODE=$?
+	if [ $EXIT_CODE = 0 ]
+	then
+		git clean -f
+		git clean -df
+	fi
+}
+
+fix-distribute() {
+	curl http://python-distribute.org/distribute_setup.py | sudo python
 }
 
 pip-update() {
@@ -21,7 +43,7 @@ pip-update() {
 	for MODULE in $MODULES
 	do
 		echo "$(tput setaf 2)$MODULE$(tput sgr0)"
-		pip install -U $MODULE
+		sudo pip install -U $MODULE
 	done
 }
 
@@ -72,8 +94,8 @@ if [ -s $BREW ]; then
 	BREW_BIN=${BREW_PREFIX}/bin
 	BREW_SBIN=${BREW_PREFIX}/sbin
 	BPATH=("${BPATH[@]}" $BREW_BIN $BREW_SBIN)
-	PYTHON_SHARE=${BREW_PREFIX}/share/python
-	BPATH=("${BPATH[@]}" $PYTHON_SHARE)
+	#PYTHON_SHARE=${BREW_PREFIX}/share/python
+	#BPATH=("${BPATH[@]}" $PYTHON_SHARE)
 fi
 
 # Remove dups
@@ -134,14 +156,8 @@ then
 fi
 
 # Alias
-MACVIM=$(which mvim 2>/dev/null)
-
 if [ -d $USER_BIN ]; then
 	alias my="cd $USER_BIN"
-fi
-
-if [ -s $MACVIM ]; then
-	alias vi="$MACVIM"
 fi
 
 if [ -d ~/Codes/git/github/nitinverma/playground ]; then

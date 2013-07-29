@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+FROM_DIR=$PWD
+TO_DIR=${FROM_DIR}/../java-backup
+
+FILES=$(find . -type f -name "*.java" | egrep "ArabicLexer.java|FrenchLexer.java|Morpha.java|PTBLexer.java|WhitespaceLexer.java|NegraPennLexer.java")
+
+for FILE in $FILES
+do
+	DIR=${TO_DIR}/$(dirname $FILE)
+	mkdir -p $DIR
+	mv $FILE ${TO_DIR}/$FILE
+done
+
+
