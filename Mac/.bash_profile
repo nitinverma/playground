@@ -9,6 +9,61 @@
 # if then else elif fi
 # http://www.thegeekstuff.com/2010/06/bash-if-statement-examples/
 
+. ~/.git-completion.bash
+. ~/.git-prompt.sh
+PS1="\h:\W \u \$(__git_ps1 "%s")\$ "
+
+ç() {
+	$*
+}
+
+∂() {
+	declare -f $1
+}
+
+_ß() {
+    local cur prev opts base
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    #
+    #  The basic options we'll complete.
+    #
+    opts="a b c"
+
+
+    #
+    #  Complete the arguments to some of the basic commands.
+    #
+    case "${prev}" in
+	a)
+	    local aa="-a --aa"
+	    COMPREPLY=( $(compgen -W "${aa}" -- ${cur}) )
+            return 0
+            ;;
+        b)
+	    local bb="-b --bb"
+	    COMPREPLY=( $(compgen -W "${bb}" -- ${cur}) )
+            return 0
+            ;;
+        *)
+        ;;
+    esac
+
+   COMPREPLY=($(compgen -W "${opts}" -- ${cur}))  
+   return 0
+}
+
+ß() {
+	echo $@
+}
+
+
+complete -F _ß ß
+complete -A function ç
+complete -A function ∂
+
 # Functions
 # SSH to linux
 sshl() {
@@ -29,7 +84,7 @@ pi() {
 	compile_all clean install -Dmaven.test.skip=true
 }
 
-pi() {
+pyi() {
 	M2_CLEAN=Y compile_all install
 }
 
