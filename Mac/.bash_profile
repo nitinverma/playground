@@ -15,6 +15,36 @@ sshl() {
 	LC_CTYPE="en_US.UTF-8" ssh $@
 }
 
+idea() {
+	## Add -Duser.name to vmoptions file
+	## "/Applications/IntelliJ IDEA 12.app/bin/idea.vmoptions"
+	open -a "Intellij IDEA 12"
+}
+
+pci() {
+	M2_CLEAN=Y compile_all clean install
+}
+
+pi() {
+	compile_all clean install -Dmaven.test.skip=true
+}
+
+pi() {
+	M2_CLEAN=Y compile_all install
+}
+
+p() {
+	compile_all test-compile
+}
+
+pt() {
+	compile_all test
+}
+
+pc() {
+	compile_all clean
+}
+
 sshr() {
 	sshl -i ~/.ssh/nitin-eu-west-1-key-1.pem $@
 }
@@ -31,6 +61,10 @@ git_branch() {
 		git clean -f
 		git clean -df
 	fi
+}
+
+git_currb() {
+	git branch | sed -nE 's/\* (.*)$/\1/p'
 }
 
 fix-distribute() {
