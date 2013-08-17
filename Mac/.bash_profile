@@ -9,9 +9,67 @@
 # if then else elif fi
 # http://www.thegeekstuff.com/2010/06/bash-if-statement-examples/
 
-. ~/.git-completion.bash
-. ~/.git-prompt.sh
-PS1="\h:\W \u \$(__git_ps1 "%s")\$ "
+export CLICOLOR=1
+export LSCOLORS=ExFxBxDxCxegedabagacad
+#export CLICOLOR=1
+#export LSCOLORS=GxFxCxDxBxegedabagaced
+
+export GIT_PS1_SHOWDIRTYSTATE=Y
+export GIT_PS1_SHOWSTASHSTATE=Y
+export GIT_PS1_SHOWUNTRACKEDFILES=Y
+export GIT_PS1_SHOWUPSTREAM=verbose
+export GIT_PS1_SHOWCOLORHINTS=Y
+
+for f in $(find /usr/local/etc/bash_completion.d ! -type d)
+do
+	source $f
+done
+
+git_repo() {
+	git remote && exec git remote -v | awk ' $3 ~ /push/ { la=split($2,a,"/"); split(a[la],b,"."); print b[1] } ' 2>/dev/null
+	
+}
+
+w_ps1() {
+awk -F\/ -v x1=$(tput setaf 6)$(tput bold) -v x2=$(tput sgr0) -v w=3 -v l=6 -v p=$PWD ' BEGIN {
+        if (l < 4) {
+                l = 4;
+        }
+        split(p,a,"\/");
+        la = length(a)
+        f=1
+        if ( la > w ) {
+                f=la-w+1;
+        }
+        for (i=f; i<=la-1; i++) {
+		aa = a[i];
+		gsub(/[aeiou]/,"",aa)
+                lai = length(aa);
+                dn=aa;
+                if (lai > l) {
+                        dn = substr(a[i],1,1) ".."  substr(a[i],lai-l+4,lai);
+                }
+                if ( i == f ) {
+                        printf "%s", dn;
+                }
+                else {
+                        printf "/%s", dn;
+                }
+        }
+	#printf x1
+        printf "/%s", a[la]
+	#printf x2
+
+}'
+}
+
+export PS1="\u \$(w_ps1) \$(__git_ps1 "%s")\$ "
+#export PS1="\u \W \$(__git_ps1 "%s")\$ "
+#export PS1="\[\u\@\$(w_ps1) \$(__git_ps1 "%s")\$ \]"
+#PS1="\u@\$(w_ps1) \$(__gitdir)@$(tput setaf 6)$(tput smul)\$(__git_ps1 "%s")$(tput sgr0)$(tput rmul)\$ "
+#PS1="\h:\W \u \$(__git_ps1 "%s")\$ "
+
+#export PS2="\[\e[1;30;47m\]| => \[\e[0m\]"
 
 ç() {
 	$*
@@ -106,6 +164,10 @@ sshr() {
 
 reset_open_with() {
 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister 	-kill -r -domain local -domain system -domain user
+}
+
+show_all_files() {
+	defaults write com.apple.finder ShowAllFiles True
 }
 
 git_branch() {
@@ -271,8 +333,9 @@ source ~/.pins.alias
 # Echo settings
 
 echo "Alias list:"
+echo "$(tput setaf 6)"
 alias
+echo "$(tput sgr0)"
 echo "PATH: $PATH"
-
 echo "Welcome $USER"
 
