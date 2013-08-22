@@ -30,6 +30,14 @@ git_repo() {
 	
 }
 
+git_mk_branch() {
+	git checkout -b $1 && git push -u origin $1
+}
+
+git_rm_branch() {
+	git branch -d $1 && git push origin --delete $1
+}
+
 w_ps1() {
 awk -F\/ -v x1=$(tput setaf 6)$(tput bold) -v x2=$(tput sgr0) -v w=3 -v l=6 -v p=$PWD ' BEGIN {
         if (l < 4) {
@@ -204,6 +212,7 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_21.jdk/Contents/Home
 export ORIG_PATH=$PATH
 export RBENV_ROOT=/usr/local/var/rbenv
 #export PYTHONPATH="/usr/local/lib/python2.7/site-packages"
+export NODE_PATH="/usr/local/lib/node_modules"
 
 APATH=($(echo $PATH | awk -F: '{ for (i = 1; i <= NF; i++ ) { print $i} }' ))
 BPATH=()
