@@ -25,6 +25,21 @@ do
 	source $f
 done
 
+git_currb() {
+	git branch | sed -nE 's/\* (.*)$/\1/p'
+}
+
+git_pull() {
+	git pull
+	curr=$(git_currb)
+	git branch | grep -v '\*'  |  xargs -IX bash -c 'git checkout X && git pull'
+	git checkout $curr
+}
+
+git_revert_last_commit() {
+	git reset --soft HEAD^
+}
+
 git_repo() {
 	git remote && exec git remote -v | awk ' $3 ~ /push/ { la=split($2,a,"/"); split(a[la],b,"."); print b[1] } ' 2>/dev/null
 	
@@ -188,9 +203,6 @@ git_branch() {
 	fi
 }
 
-git_currb() {
-	git branch | sed -nE 's/\* (.*)$/\1/p'
-}
 
 fix-distribute() {
 	curl http://python-distribute.org/distribute_setup.py | sudo python
