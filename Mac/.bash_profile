@@ -9,6 +9,7 @@
 # if then else elif fi
 # http://www.thegeekstuff.com/2010/06/bash-if-statement-examples/
 
+
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad
 #export CLICOLOR=1
@@ -24,6 +25,39 @@ for f in $(find /usr/local/etc/bash_completion.d ! -type d)
 do
 	source $f
 done
+
+which gshred && function shred() {
+	gshred $@
+}
+
+function encrypt_file() {
+(
+	id=$1
+	file=$2
+	if test -z $id || test -z $file 
+	then
+		exit 1;
+	fi
+
+	if test ! -f $file
+	then
+		echo "No such file: $file"
+		exit 1;
+	fi
+	gpg -r $1 -e $2
+	shred $2
+	rm -rf $2
+)
+}
+
+git_base () {
+	git rev-parse --show-toplevel
+}
+
+g() {
+	cd $(git_base)
+}
+
 
 git_currb() {
 	git branch | sed -nE 's/\* (.*)$/\1/p'
@@ -185,13 +219,24 @@ sshr() {
 	sshl -i ~/.ssh/nitin-eu-west-1-key-1.pem $@
 }
 
-reset_open_with() {
+mac_reset_open_with() {
 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister 	-kill -r -domain local -domain system -domain user
 }
 
-show_all_files() {
+mac_show_all_files() {
 	defaults write com.apple.finder ShowAllFiles True
 }
+
+mac_disable_mission_control() {
+	defaults write com.apple.dock mcx-expose-disabled -bool TRUE
+	killall Dock
+}
+
+mac_enable_mission_control() {
+	defaults delete com.apple.dock mcx-expose-disabled
+	killall Dock
+}
+
 
 git_branch() {
 	git checkout $1
@@ -343,6 +388,10 @@ fi
 if [ -d ~/Library/Caches/Nitin ]; then
 	alias myc="cd ~/Library/Caches/Nitin"
 fi
+
+which gfind && function find() {
+	gfind $@
+}
 
 alias of="open \${PWD}"
 alias sf="ssh nitin_matrix,pjam@shell.sourceforge.net"
