@@ -88,7 +88,7 @@ git_rm_branch() {
 }
 
 w_ps1() {
-awk -F\/ -v x1=$(tput setaf 6)$(tput bold) -v x2=$(tput sgr0) -v w=3 -v l=6 -v p=$PWD ' BEGIN {
+awk -F\/ -v x1=$(tput setaf 6)$(tput bold) -v x2=$(tput sgr0) -v w=3 -v l=6 -v p="${PWD}" ' BEGIN {
         if (l < 4) {
                 l = 4;
         }
