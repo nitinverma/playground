@@ -1,9 +1,8 @@
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-      
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
-    <groupId>yahoo.yinst.apt_bulk</groupId>
+    <groupId>com.yahoo.apt.bulk</groupId>
     <artifactId>apt-bulk-playground-nitinv-simple-experiments</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -15,15 +14,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <log4j.configuration>log4j.properties</log4j.configuration>
     </properties>
-    
-    <parent>
-        <groupId>yahoo.yinst.apt_bulk_super_pom</groupId>
-        <artifactId>apt-bulk-super-pom</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.5.0</version>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -41,79 +39,14 @@
             </plugin>
         </plugins>
     </build>
-    
-    <profiles>
-        
-        <profile>
-            <id>run15</id>
-            <activation>
-                <jdk>1.5</jdk>
-            </activation>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <version>2.3.1</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                                <configuration>
-                                    <classifier>jdk15</classifier>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            
-            <dependencies>
-            </dependencies>
-
-        </profile>
-
-        <profile>
-            <activation>
-                <jdk>1.6</jdk>
-            </activation>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <version>2.3.1</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                                <configuration>
-                                    <classifier>jdk16</classifier>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <dependencies>
-            </dependencies>
-        </profile>
-        
-    </profiles>
 
     <dependencies>
 
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
+            <version>7.11.0</version>
             <scope>test</scope>
-            <classifier>jdk15</classifier>
         </dependency>
         <!--
         <dependency>
@@ -124,68 +57,62 @@
         -->
 
         <dependency>
-            <groupId>yahoo.yinst.jports_org_springframework__spring</groupId>
-            <artifactId>org_springframework__spring</artifactId>
-        </dependency>
-         
-        <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.1.1</version>
         </dependency>
 
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.15</version>
-        </dependency>
-
-        <dependency>
-            <groupId>yahoo.yinst.yjava_oracle_jdbc_thin</groupId>
-            <artifactId>ojdbc14</artifactId>
-            <version>10.2.0.3</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.25.3</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
-            <version>10.4.2.0</version>
-        </dependency>
-        <!--
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjtools</artifactId>
-            <version>1.6.9</version>
-        </dependency>
-        -->
-        <dependency>
-            <groupId>yahoo.yinst.jports_aspectj__aspectjtools</groupId>
-            <artifactId>aspectj__aspectjtools</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jotm</groupId>
-            <artifactId>jotm</artifactId>
-            <version>2.0.10</version>
+            <version>10.17.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
-            <version>1.0.2</version>
+            <version>1.19.1</version>
         </dependency>
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>6.0</version>
         </dependency>
+
         <dependency>
-            <groupId>yahoo.yinst.jports_commons_httpclient__commons_httpclient</groupId>
-            <artifactId>commons_httpclient__commons_httpclient</artifactId>
-            <type>jar</type>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
         </dependency>
+
         <dependency>
-            <groupId>yahoo.yinst.jports_commons_codec__commons_codec</groupId>
-            <artifactId>commons_codec__commons_codec</artifactId>
-            <type>jar</type>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>7.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>7.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>7.0.2</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>7.0.2</version>
         </dependency>
 
     </dependencies>
