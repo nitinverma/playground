@@ -4,3 +4,4 @@ target
 .DS_Store
 gen-java
 gen-py
+pyplay/logs/

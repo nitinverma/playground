@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cwd=${PWD}
+cd $(dirname $0)
+script_pwd=${PWD}
+cd ${cwd}
+
+script_name=$(basename $0)
+start_time=$(date +%s%N)
+
+AWS_PROFILE=text-angad-readonly awslogs get cowinautoschedulerbot ALL --watch 2>&1 >${script_pwd}/logs/${script_name}.${start_time}.log &
+
