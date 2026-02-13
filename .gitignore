@@ -6,3 +6,4 @@ gen-java
 gen-py
 *.log
 pyplay/logs/
+*.xz
