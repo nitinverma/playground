@@ -1,0 +1,9 @@
+[package]
+name = "epsilon_sieve"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+rug = "1.29.0"
+bitvec = "1.0"
+gmp-mpfr-sys = { version = "1.7.0", features = ["use-system-libs"] }

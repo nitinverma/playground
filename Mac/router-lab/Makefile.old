@@ -1,0 +1,92 @@
+
+include ipkg.mk
+
+# ---- Router ----
+ROUTER_USER=root
+ROUTER_IP=192.168.1.1
+ROUTER_TMP=/tmp
+
+# ---- Platform ----
+GOOS=linux
+GOARCH=mipsle
+GOMIPS=softfloat
+CGO_ENABLED=0
+PKG_ARCH=mipsel_24kc
+
+# ---- Build ----
+BUILD_DIR=build
+IPK_DIR=$(BUILD_DIR)/ipk
+LDFLAGS=-s -w -buildid=
+BUILD_FLAGS=-trimpath -ldflags="$(LDFLAGS)"
+
+# ---- Auto Discover Binaries ----
+CMD_DIR=cmd
+BINARIES=$(shell find $(CMD_DIR) -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
+
+# --- Tools --
+AR=/opt/homebrew/opt/binutils/bin/gar
+TAR=/opt/homebrew/opt/gnu-tar/libexec/gnubin/tar
+
+# ---- Default ----
+all: build ipk
+
+# ---- Build All Binaries ----
+build: $(BINARIES)
+
+$(BINARIES):
+	@mkdir -p $(BUILD_DIR)
+	GOOS=$(GOOS) \
+	GOARCH=$(GOARCH) \
+	GOMIPS=$(GOMIPS) \
+	CGO_ENABLED=$(CGO_ENABLED) \
+	go build $(BUILD_FLAGS) -o $(BUILD_DIR)/$@-$(GOOS)-$(GOARCH) ./$(CMD_DIR)/$@
+	ln -sf $(BUILD_DIR)/$@-$(GOOS)-$(GOARCH) $@
+
+# ---- Size ----
+size:
+	@for bin in $(BINARIES); do \
+		echo "==== $$bin ===="; \
+		ls -lh $(BUILD_DIR)/$$bin-$(GOOS)-$(GOARCH); \
+		file $(BUILD_DIR)/$$bin-$(GOOS)-$(GOARCH); \
+		echo ""; \
+	done
+
+# ---- IPK Packaging ----
+ipk: build $(BINARIES:%=ipk-%)
+
+ipk-%: build
+	@rm -rf $(IPK_DIR)/$*
+	@mkdir -p $(IPK_DIR)/$*/CONTROL
+	@mkdir -p $(IPK_DIR)/$*/usr/bin
+
+	# Copy binary
+	cp $(BUILD_DIR)/$*-$(GOOS)-$(GOARCH) \
+	   $(IPK_DIR)/$*/usr/bin/$*
+
+	# Create control file
+	echo "Package: $*" > $(IPK_DIR)/$*/CONTROL/control
+	echo "Version: 1.0" >> $(IPK_DIR)/$*/CONTROL/control
+	echo "Section: utils" >> $(IPK_DIR)/$*/CONTROL/control
+	echo "Priority: optional" >> $(IPK_DIR)/$*/CONTROL/control
+	echo "Architecture: $(PKG_ARCH)" >> $(IPK_DIR)/$*/CONTROL/control
+	echo "Maintainer: Nitin" >> $(IPK_DIR)/$*/CONTROL/control
+	echo "Description: Auto-built Go binary $*" >> $(IPK_DIR)/$*/CONTROL/control
+
+	$(eval $(call BuildIpkg, $*, $(IPK_DIR)/$*, /tmp/$*.$$))
+
+	@echo "Built $(BUILD_DIR)/$*_1.0_$(PKG_ARCH).ipk"
+
+
+# ---- Install Specific Package ----
+install-%: ipk-%
+	scp -O $(BUILD_DIR)/$*_1.0_$(PKG_ARCH).ipk \
+	$(ROUTER_USER)@$(ROUTER_IP):$(ROUTER_TMP)/
+	ssh $(ROUTER_USER)@$(ROUTER_IP) \
+	"opkg install --force-reinstall $(ROUTER_TMP)/$*_1.0_$(PKG_ARCH).ipk"
+
+# ---- Clean ----
+clean:
+	rm -rf $(BUILD_DIR)
+
+.PHONY: all build size ipk clean
+

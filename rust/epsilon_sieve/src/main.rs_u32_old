@@ -1,0 +1,207 @@
+use std::env;
+use std::io::{self, Write};
+use std::time::Instant;
+
+const CYAN: &str = "\x1b[1;36m";
+const YELLOW: &str = "\x1b[1;33m";
+const MAGENTA: &str = "\x1b[1;35m";
+const GREEN: &str = "\x1b[1;32m";
+const RED: &str = "\x1b[1;31m";
+const WHITE: &str = "\x1b[1;37m";
+const RESET: &str = "\x1b[0m";
+
+// ----------------------------------------------------------------------
+// Bootstrapping Primes (Mod-30 Wheel Factorization)
+// ----------------------------------------------------------------------
+fn find_primes(n: usize) -> Vec<u32> {
+    if n == 0 { return vec![]; }
+    if n == 1 { return vec![2]; }
+    if n == 2 { return vec![2, 3]; }
+    if n == 3 { return vec![2, 3, 5]; }
+
+    // 1. Mathematically predict the upper bound for the N-th prime
+    let nf = n as f64;
+    // P_n is tightly bounded by N * (ln(N) + ln(ln(N)))
+    let limit = (nf * (nf.ln() + nf.ln().ln() + 1.0)).ceil() as usize;
+
+    let mut is_prime = vec![true; limit];
+    let mut primes = Vec::with_capacity(n);
+
+    // Seed the base of the wheel
+    primes.push(2);
+    primes.push(3);
+    primes.push(5);
+
+    // The Mod-30 Wheel skips all multiples of 2, 3, and 5.
+    // It only lands on numbers coprime to 30.
+    let wheel_gaps = [4, 2, 4, 2, 4, 6, 2, 6];
+
+    let mut p = 7; // The first spoke of the wheel
+    let mut w = 0; // Wheel index
+    let sqrt_limit = (limit as f64).sqrt() as usize;
+
+    // Step 1: Strike out composites using the wheel
+    while p <= sqrt_limit {
+        if is_prime[p] {
+            primes.push(p as u32);
+            if primes.len() == n { return primes; }
+
+            // Strike out multiples.
+            // We advance by 2*p to skip even multiples, saving 50% more time
+            let mut multiple = p * p;
+            while multiple < limit {
+                is_prime[multiple] = false;
+                multiple += 2 * p;
+            }
+        }
+
+        // Advance the candidate using the wheel gaps
+        p += wheel_gaps[w];
+        w = (w + 1) % 8; // Rotate the wheel
+    }
+
+    // Step 2: Harvest the surviving primes purely via the wheel
+    while p < limit {
+        if is_prime[p] {
+            primes.push(p as u32);
+            if primes.len() == n { return primes; }
+        }
+        p += wheel_gaps[w];
+        w = (w + 1) % 8;
+    }
+
+    primes
+}
+
+fn verify_factorization(mut n: u64, sieve_primes: &[u32]) -> (Vec<u32>, Vec<u64>) {
+    let mut sieve_factors = Vec::new();
+    for &p in sieve_primes {
+        if n % (p as u64) == 0 {
+            sieve_factors.push(p);
+            while n % (p as u64) == 0 { n /= p as u64; }
+        }
+    }
+    let mut non_sieve_factors = Vec::new();
+    if n > 1 { non_sieve_factors.push(n); }
+    (sieve_factors, non_sieve_factors)
+}
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    let mut n_primes: usize = 30000; 
+
+    if args.len() > 1 {
+        match args[1].parse::<usize>() {
+            Ok(num) if num > 0 => n_primes = num,
+            _ => {
+                println!("{}Usage: cargo run --release -- <prime-index>{}", RED, RESET);
+                return;
+            }
+        }
+    }
+
+    println!("{}Bootstrapping continuous waves...{}", YELLOW, RESET);
+    let primes_ext = find_primes(n_primes + 1);
+    let sieve_primes = &primes_ext[..n_primes];
+    let p_next = primes_ext[n_primes] as u64;
+    let max_valid = p_next * p_next - 1;
+
+    // We can explicitly set an Epsilon drop because the math guarantees no precision collision
+    // let eps_power = -100.0; 
+
+    // --- PASTE THIS AUTO-CALIBRATOR ---
+    let expected_noise_floor = 0.30103 * (n_primes as f64);
+    let max_p = if n_primes > 1 { (n_primes as f64) * (n_primes as f64).ln() } else { 2.0 };
+    let derivative_offset = max_p.log10();
+    
+    // Dynamically plunge the Epsilon Drop down to thousands of digits deep!
+    let eps_power = -((expected_noise_floor * 3.0) + derivative_offset + 50.0).round();
+
+    println!("{}=================================================={}", CYAN, RESET);
+    println!("{}   ANALYTIC SINC-SIEVE (Closed-Form Taylor Mode)  {}", CYAN, RESET);
+    println!("{}=================================================={}", CYAN, RESET);
+    println!("Sieve initialized with {} primes (Max Gear: {})", n_primes, sieve_primes.last().unwrap());
+    println!("Geometric Sieve Bounds: 100% accurate up to {}", max_valid);
+    println!("{}Architecture: Native f64 Angle Addition | Epsilon: 10^{}{}\n", MAGENTA, eps_power, RESET);
+
+    loop {
+        println!("{}", format!("{}-{}", WHITE, RESET).repeat(50));
+        print!("{}Enter a number between {} and {} (or 'q' to quit): {}", WHITE, p_next, max_valid, RESET);
+        io::stdout().flush().unwrap();
+
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).unwrap();
+        let input = input.trim();
+
+        if input.eq_ignore_ascii_case("q") { break; }
+
+        let target_n: u64 = match input.parse() {
+            Ok(num) => num,
+            Err(_) => { continue; }
+        };
+
+        if target_n < p_next || target_n > max_valid {
+            println!("{}Out of bounds! Domain: [{}, {}]{}", RED, p_next, max_valid, RESET);
+            continue;
+        }
+
+        // ==========================================
+        // START TOPOLOGICAL SCANNER
+        // ==========================================
+        let start_time = Instant::now();
+
+        let mut log_depth: f64 = 0.0;
+        let mut sine_count = 0;
+        let mut taylor_count = 0;
+
+        for &p in sieve_primes {
+            let p_f64 = p as f64;
+            
+            // Analytic Zero-Crossing Detector (Equivalent to evaluating the continuous limit)
+            let rem = target_n % (p as u64);
+
+            if rem == 0 {
+                // CASE 1: Exact Root. The amplitude is purely the 1st derivative (pi * epsilon / p)
+                log_depth += eps_power + std::f64::consts::PI.log10() - p_f64.log10();
+                taylor_count += 1;
+            } else {
+                // CASE 2: Non-Root. The epsilon term vanishes, and the main wave dominates
+                let amp = f64::sin(std::f64::consts::PI * (rem as f64) / p_f64);
+                log_depth += amp.abs().log10();
+                sine_count += 1;
+            }
+        }
+        
+        let calculated_sieve_factors = (log_depth / eps_power).round() as i64;
+        let elapsed = start_time.elapsed();
+        
+        // Verification Factorization
+        let (actual_sieve_factors, outside_factors) = verify_factorization(target_n, sieve_primes);
+
+        // --- OUTPUT CONSOLE ---
+        println!("\n{}[TOPOLOGY SCANNER]{}", MAGENTA, RESET);
+        println!("Raw Log-Depth:       {:.2}", log_depth);
+        println!("Calculated Sieve Factors: {}{}{}", CYAN, calculated_sieve_factors, RESET);
+        println!("{}Engine Path Routing: {} Baseline Waves, {} Taylor Derivatives{}", YELLOW, sine_count, taylor_count, RESET);
+        
+        println!("\n{}[VERIFICATION]{}", GREEN, RESET);
+        println!("Actual Sieve Factors:     {} {:?}", actual_sieve_factors.len(), actual_sieve_factors);
+        
+        if !outside_factors.is_empty() {
+            println!("Non-Sieve Factors:        {} {:?} {}(Invisible to Sieve){}", outside_factors.len(), outside_factors, YELLOW, RESET);
+        } else {
+            println!("Non-Sieve Factors:        0 []");
+        }
+
+        println!("\n{}[VERDICT]{}", WHITE, RESET);
+        if calculated_sieve_factors == 0 {
+            println!("{}>>> {} is a TRUE PRIME <<<{}", GREEN, target_n, RESET);
+        } else {
+            println!("{}>>> {} is COMPOSITE <<<{}", RED, target_n, RESET);
+        }
+        println!("{}⏱  Execution Time: {:.2?}{}", YELLOW, elapsed, RESET);
+        println!();
+    }
+}
+
+

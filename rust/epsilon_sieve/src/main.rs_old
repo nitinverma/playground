@@ -1,0 +1,220 @@
+use std::env;
+use std::io::{self, Write};
+use std::time::Instant;
+use rug::{Float, float::Constant};
+use rug::ops::Pow;
+
+// ANSI Color Codes
+const CYAN: &str = "\x1b[1;36m";
+const YELLOW: &str = "\x1b[1;33m";
+const MAGENTA: &str = "\x1b[1;35m";
+const GREEN: &str = "\x1b[1;32m";
+const RED: &str = "\x1b[1;31m";
+const WHITE: &str = "\x1b[1;37m";
+const RESET: &str = "\x1b[0m";
+
+// ----------------------------------------------------------------------
+// Bootstrapping Primes
+// ----------------------------------------------------------------------
+fn is_composite(x: u32, primes: &[u32]) -> bool {
+    for &p in primes {
+        if x % p == 0 {
+            return true;
+        }
+    }
+    false
+}
+
+fn find_primes(n: usize) -> Vec<u32> {
+    if n == 0 { return vec![]; }
+    if n == 1 { return vec![2]; }
+    
+    let mut primes = vec![2, 3];
+    let mut x = 4;
+    while primes.len() < n {
+        if !is_composite(x, &primes) {
+            primes.push(x);
+        }
+        x += 1;
+    }
+    primes
+}
+
+// ----------------------------------------------------------------------
+// Verification Engine
+// ----------------------------------------------------------------------
+fn verify_factorization(mut n: u64, sieve_primes: &[u32]) -> (Vec<u32>, Vec<u64>) {
+    let mut sieve_factors = Vec::new();
+    
+    for &p in sieve_primes {
+        if n % (p as u64) == 0 {
+            sieve_factors.push(p);
+            while n % (p as u64) == 0 {
+                n /= p as u64;
+            }
+        }
+    }
+    
+    let mut non_sieve_factors = Vec::new();
+    if n > 1 {
+        non_sieve_factors.push(n);
+    }
+    
+    (sieve_factors, non_sieve_factors)
+}
+
+// ----------------------------------------------------------------------
+// Main Execution
+// ----------------------------------------------------------------------
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    let mut n_primes: usize = 25; // Default
+
+    if args.len() > 1 {
+        match args[1].parse::<usize>() {
+            Ok(num) if num > 0 => n_primes = num,
+            _ => {
+                println!("{}Usage: cargo run -- <prime-index>{}", RED, RESET);
+                return;
+            }
+        }
+    }
+
+    println!("{}Bootstrapping continuous waves...{}", YELLOW, RESET);
+    let primes_ext = find_primes(n_primes + 1);
+    
+    let sieve_primes = &primes_ext[..n_primes];
+    let p_next = primes_ext[n_primes] as u64;
+    let max_valid = p_next * p_next - 1;
+
+    // ------------------------------------------------------------------
+    // DYNAMIC PRECISION ENGINE (Sine-Sieve Calibration)
+    // ------------------------------------------------------------------
+    let expected_noise_floor = 0.30103 * (n_primes as f64);
+    
+    let max_p = if n_primes > 1 { 
+        (n_primes as f64) * (n_primes as f64).ln() 
+    } else { 2.0 };
+    let derivative_offset = max_p.log10();
+    
+    let eps_power = -(((expected_noise_floor * 3.0) + derivative_offset + 50.0) as i32);
+    
+    let integer_digits = if max_valid > 0 { 
+        (max_valid as f64).log10() as i32 + 1 
+    } else { 1 };
+    
+    let dps = integer_digits + eps_power.abs() + 20;
+    
+    // Convert decimal precision (dps) to bit precision for `rug` (approx 3.32 bits per digit)
+    let prec_bits = ((dps as f64) * 3.321928094887362).ceil() as u32;
+
+    println!("{}=================================================={}", CYAN, RESET);
+    println!("{}    PURE SINE-SIEVE (High-Speed Epsilon Rust)     {}", CYAN, RESET);
+    println!("{}=================================================={}", CYAN, RESET);
+    println!("Sieve initialized with {} primes (Max Sieve Gear: {})", n_primes, sieve_primes.last().unwrap());
+    println!("The next prime is {}.", p_next);
+    println!("{}Geometric Sieve Bounds: 100% accurate up to {}{}", YELLOW, max_valid, RESET);
+    println!("{}Auto-Calibrated DPS: {} | Epsilon Shift: 10^{}{}\n", MAGENTA, dps, eps_power, RESET);
+
+    // --- PRE-ALLOCATION OPTIMIZATION ---
+    // We pre-create `Float` instances for every prime. 
+    // This removes all memory allocation inside the hot loop.
+    let pi_const = Float::with_val(prec_bits, Constant::Pi);
+    let mut p_floats = Vec::with_capacity(sieve_primes.len());
+    for &p in sieve_primes {
+        p_floats.push(Float::with_val(prec_bits, p));
+    }
+    
+    let eps = Float::with_val(prec_bits, 10.0).pow(eps_power);
+
+    // Interactive Loop
+    loop {
+        println!("{}", format!("{}-{}", WHITE, RESET).repeat(50));
+        print!("{}Enter a number between {} and {} (or 'q' to quit): {}", WHITE, p_next, max_valid, RESET);
+        io::stdout().flush().unwrap();
+
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).unwrap();
+        let input = input.trim();
+
+        if input.eq_ignore_ascii_case("q") {
+            println!("Shutting down Sine-Sieve...");
+            break;
+        }
+
+        let target_n: u64 = match input.parse() {
+            Ok(num) => num,
+            Err(_) => {
+                println!("{}Invalid input. Please enter an integer.{}", RED, RESET);
+                continue;
+            }
+        };
+
+        if target_n < p_next || target_n > max_valid {
+            println!("{}Out of bounds! Please stick to the valid domain: [{}, {}]{}", RED, p_next, max_valid, RESET);
+            continue;
+        }
+
+        // ==========================================
+        // START TIMER
+        // ==========================================
+        let start_time = Instant::now();
+
+        // ------------------------------------------------------------------
+        // THE PHYSICS ENGINE (Zero-Allocation Hot Loop)
+        // ------------------------------------------------------------------
+        let mut log_depth = Float::with_val(prec_bits, 0.0);
+        
+        let x = Float::with_val(prec_bits, target_n) + &eps;
+        let pi_x = Float::with_val(prec_bits, &pi_const * &x);
+
+        for p_float in &p_floats {
+            // z = (pi * x) / p
+            let z = Float::with_val(prec_bits, &pi_x / p_float);
+            let amp = z.sin();
+            
+            if amp != 0.0 {
+                log_depth += amp.abs().log10();
+            }
+        }
+        
+        // ------------------------------------------------------------------
+        // Extract Discrete Topology
+        // ------------------------------------------------------------------
+        let depth_f64 = log_depth.to_f64();
+        let calculated_sieve_factors = (depth_f64 / (eps_power as f64)).round() as i64;
+        
+        // Verification Factorization
+        let (actual_sieve_factors, outside_factors) = verify_factorization(target_n, sieve_primes);
+
+        // ==========================================
+        // STOP TIMER
+        // ==========================================
+        let elapsed = start_time.elapsed();
+
+        // --- OUTPUT CONSOLE ---
+        println!("\n{}[TOPOLOGY SCANNER]{}", MAGENTA, RESET);
+        println!("Raw Log-Depth:       {:.2}", depth_f64);
+        println!("Calculated Sieve Factors: {}{}{}", CYAN, calculated_sieve_factors, RESET);
+        
+        println!("\n{}[VERIFICATION]{}", GREEN, RESET);
+        println!("Actual Sieve Factors:     {} {:?}", actual_sieve_factors.len(), actual_sieve_factors);
+        
+        if !outside_factors.is_empty() {
+            println!("Non-Sieve Factors:        {} {:?} {}(Invisible to Sinc-Sieve){}", outside_factors.len(), outside_factors, YELLOW, RESET);
+        } else {
+            println!("Non-Sieve Factors:        0 []");
+        }
+
+        println!("\n{}[VERDICT]{}", WHITE, RESET);
+        if calculated_sieve_factors == 0 {
+            println!("{}>>> {} is a TRUE PRIME <<<{}", GREEN, target_n, RESET);
+        } else {
+            println!("{}>>> {} is COMPOSITE <<<{}", RED, target_n, RESET);
+        }
+
+        println!("{}⏱  Execution Time: {:.2?}{}", YELLOW, elapsed, RESET);
+        println!();
+    }
+}
+
